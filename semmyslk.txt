@@ -1,0 +1,25 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+# lista de links a serem acessados
+links = ["https://ev.braip.com/vendas/obrigado/venjqpyxo", "https://ev.braip.com/vendas/obrigado/venjqpyxo"]
+
+# inicializar o driver do navegador
+driver = webdriver.Chrome()
+
+# percorrer a lista de links
+for link in links:
+    driver.get(link)
+    # mudar o contexto para o iframe
+    iframe = driver.find_elements(By.TAG_NAME, "iframe")[0]
+    driver.switch_to.frame(iframe)
+
+    # encontrar o elemento do botão com o id "bt_pulse"
+    button = driver.find_element(By.TAG_NAME, 'button')
+    # clicar no botão
+    button.click()
+    # mudar o contexto de volta para o contexto principal
+    driver.switch_to.default_content()
+
+# fechar o navegador
+driver.quit()
