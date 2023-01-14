@@ -25,9 +25,11 @@ cursor = cnx.cursor()
 query = "SELECT codigos FROM Codigo"
 cursor.execute(query)
 results = cursor.fetchall()
+link_count = 0
 total_links = len(results)
-i = 0
-for (codigo,) in cursor:
+link_counter = 0
+
+for (codigo,) in results:
     link = link_prefix + codigo
     driver.execute_script(f"window.open('{link}', '_blank');")
     driver.switch_to.window(driver.window_handles[-1])
@@ -37,6 +39,7 @@ for (codigo,) in cursor:
     iframe = driver.find_elements(By.TAG_NAME, "iframe")[0]
     driver.switch_to.frame(iframe)
 
+
     # encontrar a tag do botão
     button = driver.find_element(By.TAG_NAME, 'button')
     # clicar no botão
@@ -45,16 +48,18 @@ for (codigo,) in cursor:
     driver.switch_to.default_content()
     # switch back to the main window
     driver.switch_to.window(driver.window_handles[0])
-    i += 1
-    # Deletando o link acessado do banco de dados
+    # Apaga o link
     cursor.execute("DELETE FROM Codigo WHERE codigos = '{}'".format(codigo))
     cnx.commit()
-    if i == total_links:
+    link_count += 1
+    if link_count == total_links:
         driver.quit()
-    # Fecha o navegador quando acabarem os links
-    if i == total_links:
-        driver.quit()
-# fechar o cursor e a conexão com o banco de dados
+
+    link_counter += 1
+    if link_counter == 20:
+        driver.delete_all_cookies()
+        link_counter = 0
+    
 cursor.close()
 cnx.close()
 

@@ -37,7 +37,7 @@ if(isset($_FILES['file']['name']))
             if ($conn->query($sql) === TRUE) {
                 $result = true;
             } else {
-                echo "Erro ao inserir código: " . $conn->error;
+                echo "<script>alert('Erro ao inserir código: '$conn->error;); window.location = '../index.html';</script>";
             }
         }
         if($result) {
@@ -46,12 +46,12 @@ if(isset($_FILES['file']['name']))
     }
     else
     {
-        echo "Por favor, selecione um arquivo com extensão .xlsx";
+        echo "<script>alert('Por favor, selecione um arquivo com extensão .xlsx'); window.location = '../index.html';</script>";
     }
 }
 else
 {
-    echo "Por favor, selecione um arquivo.";
+    echo "<script>alert('Por favor, selecione um arquivo.'); window.location = '../index.html';</script>";
 }
 
 // Fecha a conexão com o banco de dados
